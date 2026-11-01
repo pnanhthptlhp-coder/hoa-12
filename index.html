@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Đề kiểm tra giữa kỳ I – Hóa học 12</title>
+<!--
+  Đề kiểm tra online – Hóa học 12 – Giữa học kỳ I (2026 – 2027).
+  Trang tĩnh, chạy được trên GitHub Pages (tên tệp phải là index.html).
+  Thời gian làm bài đổi ở EXAM.duration trong khối <script> bên dưới.
+  Muốn cho một máy làm lại từ đầu (khi thử đề): mở trang với đuôi #reset.
+-->
+<style>
+:root{
+  --bg:#f3f5fa; --card:#ffffff; --ink:#18202f; --muted:#586174; --line:#d6dce8;
+  --brand:#1d5bbf; --brand-ink:#ffffff; --brand-soft:#e7effc;
+  --ok:#0f7a3c; --okbg:#e5f5ea; --bad:#b3261e; --badbg:#fdecea; --warn:#8a5200; --warnbg:#fff3dc;
+  --radius:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f131b; --card:#171d29; --ink:#e7ebf4; --muted:#9aa5ba; --line:#2a3345;
+    --brand:#6aa0ff; --brand-ink:#08111f; --brand-soft:#1c2a45;
+    --ok:#5fd18a; --okbg:#12301f; --bad:#ff8c82; --badbg:#3a1b19; --warn:#ffc266; --warnbg:#38280f; }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  padding-bottom:env(safe-area-inset-bottom,0)}
+[hidden]{display:none!important}
+.wrap{max-width:860px;margin:0 auto;padding:16px 14px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin:0 0 14px}
+h1{font-size:1.45rem;line-height:1.3;margin:0 0 4px}
+h2{font-size:1.1rem;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 14px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.meta div{background:var(--brand-soft);border-radius:10px;padding:10px 12px}
+.meta b{display:block;font-size:.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.meta span{font-weight:650}
+.rules{margin:8px 0 0;padding-left:20px}
+.rules li{margin:4px 0}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0 6px}
+label.f{display:block;font-weight:600;font-size:.92rem}
+label.f input{display:block;width:100%;margin-top:4px;padding:10px 12px;font:inherit;color:var(--ink);
+  background:var(--card);border:1px solid var(--line);border-radius:10px}
+input:focus-visible,button:focus-visible,summary:focus-visible,.opt:focus-within{outline:3px solid var(--brand);outline-offset:2px}
+.err{color:var(--bad);font-weight:600;min-height:1.4em;margin:6px 0 0}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px}
+button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:700}
+button.primary:hover{filter:brightness(1.07)}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* thanh trạng thái */
+.bar{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);
+  padding:8px 14px;padding-top:calc(8px + env(safe-area-inset-top,0))}
+.bar-in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.25rem;padding:2px 10px;border-radius:8px;background:var(--brand-soft)}
+.timer.low{background:var(--warnbg);color:var(--warn)}
+.timer.crit{background:var(--badbg);color:var(--bad)}
+.prog{flex:1;min-width:130px;font-size:.88rem;color:var(--muted)}
+.prog i{display:block;height:6px;border-radius:4px;background:var(--line);margin-top:4px;overflow:hidden}
+.prog i b{display:block;height:100%;width:0;background:var(--brand);transition:width .2s}
+.who{font-size:.85rem;color:var(--muted)}
+
+details.nav{margin:12px 0}
+details.nav summary{cursor:pointer;font-weight:650;padding:6px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips h4{flex-basis:100%;margin:6px 0 0;font-size:.82rem;color:var(--muted)}
+.chip{min-width:36px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-size:.88rem;font-weight:600}
+.chip.done{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.chip.part{background:var(--brand-soft);border-color:var(--brand)}
+.chip.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.chip.bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+.chip.half{background:var(--warn);color:#fff;border-color:var(--warn)}
+
+/* đề */
+.part-h{margin:22px 0 8px;font-size:1.05rem}
+.part-h small{display:block;color:var(--muted);font-weight:400;font-size:.9rem}
+article.q{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 12px;margin:0 0 12px;scroll-margin-top:84px}
+article.q.ok{border-color:var(--ok)}
+article.q.bad{border-color:var(--bad)}
+.qh{display:flex;align-items:baseline;gap:8px;margin:0 0 6px}
+.qn{font-weight:800}
+.mark{margin-left:auto;font-weight:700;font-size:.88rem}
+.mark.ok{color:var(--ok)} .mark.bad{color:var(--bad)} .mark.half{color:var(--warn)}
+.qt{margin:0 0 8px}
+.opts{display:grid;grid-template-columns:1fr;gap:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--card)}
+.opt:hover{border-color:var(--brand)}
+.opt input{margin-top:5px;flex:none;accent-color:var(--brand)}
+.opt.sel{background:var(--brand-soft);border-color:var(--brand)}
+.ol{font-weight:800;flex:none}
+.stmt{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center;padding:9px 0;border-top:1px dashed var(--line)}
+.stmt .tf{display:flex;gap:6px}
+.tf label{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-weight:650;background:var(--card)}
+.tf label.sel{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.tf input{accent-color:var(--brand)}
+.stmt .sm{font-size:.84rem;font-weight:700;grid-column:1/-1}
+.stmt.ok{background:var(--okbg)} .stmt.bad{background:var(--badbg)}
+.ans-in{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ans-in input{width:180px;max-width:100%;padding:10px 12px;font:inherit;font-weight:650;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px}
+.ans-in span{color:var(--muted);font-size:.88rem}
+.multi{margin:4px 0 8px 14px}
+.disabled-note{color:var(--muted);font-size:.9rem}
+sub,sup{line-height:0}
+.foot{display:flex;justify-content:center;margin:24px 0 8px}
+.foot button{padding:12px 28px;font-size:1.05rem}
+
+/* kết quả */
+.score{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.big{font-size:2.6rem;font-weight:800;line-height:1;color:var(--brand)}
+.big small{font-size:1.1rem;color:var(--muted);font-weight:600}
+table.sc{border-collapse:collapse;width:100%;margin:12px 0}
+table.sc th,table.sc td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+table.sc td:nth-child(n+2),table.sc th:nth-child(n+2){text-align:right;white-space:nowrap}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.note{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);padding:20px;max-width:min(92vw,420px)}
+dialog::backdrop{background:rgba(10,14,24,.55)}
+dialog .actions{justify-content:flex-end}
+
+@media (max-width:560px){
+  .wrap{padding:12px 10px 32px} .card{padding:16px}
+  .stmt{grid-template-columns:1fr}
+  .bar-in{gap:6px}
+}
+@media print{
+  .bar,.foot,details.nav,.actions,#screen-start{display:none!important}
+  body{background:#fff;color:#000}
+  .card,article.q{border-color:#999;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<!-- MÀN HÌNH BẮT ĐẦU -->
+<div class="wrap" id="screen-start">
+  <div class="card">
+    <h1>Đề kiểm tra giữa học kỳ I – Hóa học 12</h1>
+    <p class="sub">Năm học 2026 – 2027 · Phạm vi: Bài 1 đến hết Bài 9 (Ester – Lipid, Carbohydrate, Hợp chất chứa nitrogen)</p>
+    <div class="meta">
+      <div><b>Thời gian</b><span id="m-time"></span></div>
+      <div><b>Số câu</b><span>28 câu · 40 lệnh hỏi</span></div>
+      <div><b>Thang điểm</b><span>10 điểm</span></div>
+    </div>
+    <h2>Cấu trúc và cách làm bài</h2>
+    <ul class="rules">
+      <li><b>Phần I</b> – 18 câu nhiều phương án lựa chọn (4,5 điểm, 0,25 điểm/câu). Mỗi câu chọn một phương án.</li>
+      <li><b>Phần II</b> – 4 câu đúng/sai, mỗi câu 4 ý (tối đa 4,0 điểm). Mỗi ý chọn <i>Đúng</i> hoặc <i>Sai</i>. Điểm mỗi câu theo số ý đúng: 1 ý → 0,1; 2 ý → 0,25; 3 ý → 0,5; 4 ý → 1,0.</li>
+      <li><b>Phần III</b> – 6 câu trả lời ngắn (1,5 điểm, 0,25 điểm/câu). Nhập một số; dùng dấu phẩy hoặc dấu chấm đều được. Làm tròn theo yêu cầu của từng câu.</li>
+      <li>Thể tích khí, nếu có, đo ở điều kiện chuẩn (đkc: 25 °C, 1 bar; 24,79 L/mol).</li>
+      <li>Bài làm được lưu tự động trên máy này. Nếu lỡ tải lại trang, bạn vẫn quay lại đúng bài đang làm và đồng hồ vẫn chạy. Hết giờ, bài sẽ tự động nộp.</li>
+    </ul>
+    <form class="form" id="start-form" autocomplete="off" novalidate>
+      <label class="f">Họ và tên *<input id="f-name" maxlength="60" required></label>
+      <label class="f">Lớp *<input id="f-class" maxlength="12" required></label>
+      <label class="f">Số báo danh<input id="f-sbd" maxlength="12"></label>
+    </form>
+    <p class="err" id="start-err" role="alert"></p>
+    <button class="primary" id="btn-start" type="button">Bắt đầu làm bài</button>
+  </div>
+</div>
+
+<!-- MÀN HÌNH LÀM BÀI / KẾT QUẢ -->
+<div id="screen-exam" hidden>
+  <div class="bar" id="bar">
+    <div class="bar-in">
+      <div class="timer" id="timer" aria-live="off">--:--</div>
+      <div class="prog"><span id="prog-txt"></span><i><b id="prog-bar"></b></i></div>
+      <div class="who" id="who"></div>
+      <button class="primary" id="btn-submit" type="button">Nộp bài</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="card" id="result" hidden></section>
+
+    <details class="nav" id="nav">
+      <summary>Danh sách câu hỏi</summary>
+      <div class="chips" id="chips"></div>
+    </details>
+
+    <main id="paper"></main>
+
+    <div class="foot" id="foot"><button class="primary" id="btn-submit2" type="button">Nộp bài</button></div>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <h2>Nộp bài?</h2>
+  <p id="dlg-msg"></p>
+  <div class="actions">
+    <button type="button" id="dlg-cancel">Tiếp tục làm</button>
+    <button type="button" class="primary" id="dlg-ok">Nộp bài</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+'use strict';
+var EXAM = {"id":"hoa12-gk1-2026-2027","title":"Đề kiểm tra giữa kỳ I – Hóa học 12","duration":50,"salt":"h12-gk1-2026|ltv","p1":[{"id":"I1","n":1,"html":"Chất nào sau đây là chất béo?","o":["C\u003csub>17\u003c/sub>H\u003csub>35\u003c/sub>COOH.","C\u003csub>3\u003c/sub>H\u003csub>5\u003c/sub>(OH)\u003csub>3\u003c/sub>.","(C\u003csub>17\u003c/sub>H\u003csub>35\u003c/sub>COO)\u003csub>3\u003c/sub>C\u003csub>3\u003c/sub>H\u003csub>5\u003c/sub>.","C\u003csub>17\u003c/sub>H\u003csub>35\u003c/sub>COONa."],"h":"f0uw9cdq98"},{"id":"I2","n":2,"html":"Ester no, đơn chức, mạch hở có công thức chung là","o":["C\u003csub>n\u003c/sub>H\u003csub>2n\u003c/sub>O\u003csub>2\u003c/sub> (n ≥ 2).","C\u003csub>n\u003c/sub>H\u003csub>2n\u003c/sub>O (n ≥ 2).","C\u003csub>n\u003c/sub>H\u003csub>2n−2\u003c/sub>O\u003csub>2\u003c/sub> (n ≥ 3).","C\u003csub>n\u003c/sub>H\u003csub>2n+2\u003c/sub>O (n ≥ 1)."],"h":"n9htkqzy33"},{"id":"I3","n":3,"html":"Thành phần chính của xà phòng là","o":["ester của glycerol với acid béo.","muối sodium hoặc potassium của acid béo.","hỗn hợp glycerol và acid béo.","muối sodium của acid alkylbenzenesulfonic."],"h":"3ycjeub5uv"},{"id":"I4","n":4,"html":"Methyl acetate (CH\u003csub>3\u003c/sub>COOCH\u003csub>3\u003c/sub>) và propanoic acid (CH\u003csub>3\u003c/sub>CH\u003csub>2\u003c/sub>COOH) có cùng công thức phân tử C\u003csub>3\u003c/sub>H\u003csub>6\u003c/sub>O\u003csub>2\u003c/sub>, nhưng nhiệt độ sôi của methyl acetate (57 °C) thấp hơn nhiều so với propanoic acid (141 °C). Nguyên nhân chủ yếu là","o":["methyl acetate có phân tử khối nhỏ hơn.","phân tử methyl acetate phân cực mạnh hơn.","methyl acetate tạo được liên kết hydrogen liên phân tử mạnh hơn.","propanoic acid tạo được liên kết hydrogen liên phân tử còn methyl acetate thì không."],"h":"1p1vg19i1ro"},{"id":"I5","n":5,"html":"Hydrogen hóa hoàn toàn triolein (C\u003csub>17\u003c/sub>H\u003csub>33\u003c/sub>COO)\u003csub>3\u003c/sub>C\u003csub>3\u003c/sub>H\u003csub>5\u003c/sub> (xúc tác Ni, t°) thu được chất nào sau đây?","o":["Tristearin (C\u003csub>17\u003c/sub>H\u003csub>35\u003c/sub>COO)\u003csub>3\u003c/sub>C\u003csub>3\u003c/sub>H\u003csub>5\u003c/sub>.","Tripalmitin (C\u003csub>15\u003c/sub>H\u003csub>31\u003c/sub>COO)\u003csub>3\u003c/sub>C\u003csub>3\u003c/sub>H\u003csub>5\u003c/sub>.","Trilinolein (C\u003csub>17\u003c/sub>H\u003csub>31\u003c/sub>COO)\u003csub>3\u003c/sub>C\u003csub>3\u003c/sub>H\u003csub>5\u003c/sub>.","Glycerol và C\u003csub>17\u003c/sub>H\u003csub>35\u003c/sub>COONa."],"h":"nch43vuy64"},{"id":"I6","n":6,"html":"Để sản xuất xà phòng, người ta đun nóng chất béo với","o":["dung dịch H\u003csub>2\u003c/sub>SO\u003csub>4\u003c/sub> loãng.","H\u003csub>2\u003c/sub> (xúc tác Ni).","dung dịch NaOH hoặc KOH.","oxygen không khí."],"h":"2a07pz06mq8"},{"id":"I7","n":7,"html":"Chất nào sau đây thuộc loại monosaccharide?","o":["Saccharose.","Maltose.","Glucose.","Tinh bột."],"h":"1fadjg6sf0f"},{"id":"I8","n":8,"html":"Glucose có nhiều trong quả nho chín nên còn được gọi là","o":["đường nho.","đường mía.","đường mạch nha.","đường củ cải."],"h":"27v3jxgi7kt"},{"id":"I9","n":9,"html":"Thành phần chính của bông nõn là","o":["tinh bột.","cellulose.","saccharose.","glucose."],"h":"1izrsnrjoq9"},{"id":"I10","n":10,"html":"Ở nhiệt độ thường, cho glucose tác dụng với Cu(OH)\u003csub>2\u003c/sub> trong môi trường kiềm, lắc nhẹ thì quan sát được hiện tượng nào sau đây?","o":["Xuất hiện kết tủa màu đỏ gạch.","Xuất hiện kết tủa màu trắng.","Dung dịch chuyển sang màu tím.","Kết tủa tan, thu được dung dịch màu xanh lam."],"h":"1i75jd9m761"},{"id":"I11","n":11,"html":"Chất nào sau đây là amine?","o":["CH\u003csub>3\u003c/sub>NH\u003csub>2\u003c/sub>.","CH\u003csub>3\u003c/sub>COOH.","CH\u003csub>3\u003c/sub>COONH\u003csub>4\u003c/sub>.","H\u003csub>2\u003c/sub>N–CH\u003csub>2\u003c/sub>–COOH."],"h":"2bu8a3nqisv"},{"id":"I12","n":12,"html":"Ở điều kiện thường, chất nào sau đây là chất khí?","o":["C\u003csub>6\u003c/sub>H\u003csub>5\u003c/sub>NH\u003csub>2\u003c/sub>.","CH\u003csub>3\u003c/sub>NH\u003csub>2\u003c/sub>.","(C\u003csub>2\u003c/sub>H\u003csub>5\u003c/sub>)\u003csub>2\u003c/sub>NH.","C\u003csub>6\u003c/sub>H\u003csub>5\u003c/sub>CH\u003csub>2\u003c/sub>NH\u003csub>2\u003c/sub>."],"h":"ptia6ujvxc"},{"id":"I13","n":13,"html":"Chất nào sau đây là amino acid?","o":["CH\u003csub>3\u003c/sub>CH\u003csub>2\u003c/sub>NH\u003csub>2\u003c/sub>.","HOOC–COOH.","CH\u003csub>3\u003c/sub>COOCH\u003csub>3\u003c/sub>.","H\u003csub>2\u003c/sub>N–CH\u003csub>2\u003c/sub>–COOH."],"h":"1brg16cwfi8"},{"id":"I14","n":14,"html":"Chất có công thức H\u003csub>2\u003c/sub>N–CH(CH\u003csub>3\u003c/sub>)–COOH có tên gọi là","o":["glycine.","alanine.","valine.","lysine."],"h":"1dbjfqoxo9i"},{"id":"I15","n":15,"html":"Liên kết –CO–NH– giữa hai đơn vị α-amino acid trong phân tử peptide được gọi là","o":["liên kết ester.","liên kết ion.","liên kết peptide.","liên kết hydrogen."],"h":"2d3qait5q1l"},{"id":"I16","n":16,"html":"Dung dịch chất nào sau đây làm quỳ tím chuyển sang màu xanh?","o":["CH\u003csub>3\u003c/sub>NH\u003csub>2\u003c/sub>.","C\u003csub>6\u003c/sub>H\u003csub>5\u003c/sub>NH\u003csub>2\u003c/sub>.","H\u003csub>2\u003c/sub>N–CH\u003csub>2\u003c/sub>–COOH.","CH\u003csub>3\u003c/sub>COOH."],"h":"1mo2ojyw89j"},{"id":"I17","n":17,"html":"Glycine có điểm đẳng điện pI = 6,0. Đặt dung dịch glycine có pH = 11 vào điện trường (hai điện cực nhúng trong dung dịch). Phát biểu nào sau đây đúng?","o":["Glycine tồn tại chủ yếu ở dạng cation H\u003csub>3\u003c/sub>N\u003csup>+\u003c/sup>–CH\u003csub>2\u003c/sub>–COOH và di chuyển về cực âm.","Glycine tồn tại chủ yếu ở dạng ion lưỡng cực H\u003csub>3\u003c/sub>N\u003csup>+\u003c/sup>–CH\u003csub>2\u003c/sub>–COO\u003csup>−\u003c/sup> nên không di chuyển.","Glycine tồn tại chủ yếu ở dạng anion H\u003csub>2\u003c/sub>N–CH\u003csub>2\u003c/sub>–COO\u003csup>−\u003c/sup> và di chuyển về cực âm.","Glycine tồn tại chủ yếu ở dạng anion H\u003csub>2\u003c/sub>N–CH\u003csub>2\u003c/sub>–COO\u003csup>−\u003c/sup> và di chuyển về cực dương."],"h":"1itrop0dgz8"},{"id":"I18","n":18,"html":"Số tripeptide mạch hở mà phân tử chứa đồng thời ba gốc glycine, alanine và valine (mỗi loại một gốc) là","o":["3.","4.","6.","9."],"h":"1j6i282kmp4"}],"p2":[{"id":"II1","n":1,"html":"Thí nghiệm xà phòng hóa chất béo được tiến hành như sau: cho vào bát sứ khoảng 2 g mỡ lợn (hoặc dầu ăn), 4 mL dung dịch NaOH 40% và 2 mL ethanol; đun sôi nhẹ hỗn hợp, vừa đun vừa khuấy đều trong khoảng 30 phút, thỉnh thoảng thêm nước cất để giữ cho thể tích hỗn hợp không đổi. Sau đó rót thêm vào hỗn hợp 4 – 5 mL dung dịch NaCl bão hòa nóng, khuấy nhẹ rồi để nguội.","items":[{"id":"II1a","html":"Mỡ lợn và dầu ăn đều thuộc loại chất béo, là trieste của glycerol với các acid béo.","h":"2a2le35xz08"},{"id":"II1b","html":"Phản ứng xà phòng hóa chất béo trong môi trường kiềm là phản ứng thuận nghịch.","h":"124s7zk76e3"},{"id":"II1c","html":"Sau khi thêm dung dịch NaCl bão hòa và để nguội, xà phòng tách ra thành lớp chất rắn màu trắng đục nổi lên trên bề mặt hỗn hợp.","h":"1agv85bh9q4"},{"id":"II1d","html":"Xà phòng giặt trong nước cứng (chứa nhiều ion Ca\u003csup>2+\u003c/sup>, Mg\u003csup>2+\u003c/sup>) cho nhiều bọt và có hiệu quả giặt rửa như trong nước mềm.","h":"144lnnw79vg"}]},{"id":"II2","n":2,"html":"Tiến hành thí nghiệm: cho 1 mL dung dịch AgNO\u003csub>3\u003c/sub> 1% vào ống nghiệm sạch, nhỏ từ từ từng giọt dung dịch NH\u003csub>3\u003c/sub> 5% đến khi kết tủa tan hết. Thêm 1 mL dung dịch glucose 10%, đun nóng nhẹ ống nghiệm trong cốc nước nóng khoảng 5 phút.","items":[{"id":"II2a","html":"Glucose và fructose đều thuộc loại monosaccharide, có cùng công thức phân tử C\u003csub>6\u003c/sub>H\u003csub>12\u003c/sub>O\u003csub>6\u003c/sub>.","h":"1ldioqyjjtk"},{"id":"II2b","html":"Glucose phản ứng được với thuốc thử Tollens vì ở dạng mạch hở trong phân tử có nhóm –CHO.","h":"63bjm0wk6w"},{"id":"II2c","html":"Trên thành ống nghiệm xuất hiện lớp kim loại bạc sáng bóng; hiện tượng này chứng tỏ glucose có tính oxi hóa.","h":"1w9s33ggpp3"},{"id":"II2d","html":"Thủy phân saccharose trong môi trường acid thu được hai phân tử glucose.","h":"m0vfjk34rh"}]},{"id":"II3","n":3,"html":"Saccharose, tinh bột và cellulose là các carbohydrate có vai trò quan trọng trong đời sống và sản xuất. Tiến hành thí nghiệm: cho 2 mL hồ tinh bột (đã để nguội) vào ống nghiệm, nhỏ 1 – 2 giọt dung dịch iodine, lắc nhẹ; sau đó đun nóng ống nghiệm rồi để nguội.","items":[{"id":"II3a","html":"Saccharose có nhiều trong cây mía, củ cải đường và hoa thốt nốt.","h":"24fiz324o3l"},{"id":"II3b","html":"Tinh bột là thành phần chính của thành tế bào thực vật, gỗ và bông.","h":"fpcz4zx790"},{"id":"II3c","html":"Khi nhỏ dung dịch iodine vào hồ tinh bột nguội thì xuất hiện màu xanh tím; khi đun nóng màu xanh tím biến mất, để nguội màu xanh tím xuất hiện trở lại.","h":"2g9c0zuczyz"},{"id":"II3d","html":"Cellulose tác dụng với nitric acid đặc (xúc tác sulfuric acid đặc) tạo cellulose acetate.","h":"1ww267a04dl"}]},{"id":"II4","n":4,"html":"Tiến hành các thí nghiệm sau. Thí nghiệm 1: nhỏ từ từ dung dịch methylamine vào ống nghiệm chứa dung dịch FeCl\u003csub>3\u003c/sub>. Thí nghiệm 2: cho 1 mL dung dịch NaOH 30% và vài giọt dung dịch CuSO\u003csub>4\u003c/sub> 2% vào ống nghiệm chứa 2 mL dung dịch tripeptide Gly–Ala–Gly, lắc đều.","items":[{"id":"II4a","html":"Aniline là chất lỏng ở điều kiện thường, ít tan trong nước.","h":"22vjyndelpp"},{"id":"II4b","html":"Dung dịch methylamine và dung dịch aniline đều làm quỳ tím chuyển sang màu xanh.","h":"825ttzwq4k"},{"id":"II4c","html":"Ở thí nghiệm 1 xuất hiện kết tủa màu nâu đỏ do methylamine có tính base.","h":"15t1ic6cm5i"},{"id":"II4d","html":"Ở thí nghiệm 2 xuất hiện màu tím do tripeptide bị thủy phân thành glycine và alanine.","h":"1qc4sl1g5ry"}]}],"p3":[{"id":"III1","n":1,"html":"Số đồng phân cấu tạo ester đơn chức, no, mạch hở có công thức phân tử C\u003csub>4\u003c/sub>H\u003csub>8\u003c/sub>O\u003csub>2\u003c/sub> là bao nhiêu?","h":"swx4lv97z"},{"id":"III2","n":2,"html":"Xà phòng hóa hoàn toàn 17,68 gam triolein (C\u003csub>57\u003c/sub>H\u003csub>104\u003c/sub>O\u003csub>6\u003c/sub>) bằng dung dịch NaOH dư, đun nóng, thu được glycerol và m gam sodium oleate (C\u003csub>17\u003c/sub>H\u003csub>33\u003c/sub>COONa). Giá trị của m là bao nhiêu? (Làm tròn kết quả đến hàng phần trăm.)","h":"1xxy1bacn6g"},{"id":"III3","n":3,"html":"Cho 36,0 gam hỗn hợp X gồm glucose và fructose có số mol bằng nhau tác dụng với lượng dư thuốc thử Tollens, đun nóng. Biết hiệu suất phản ứng của mỗi chất là 80%. Khối lượng Ag thu được là bao nhiêu gam? (Làm tròn kết quả đến hàng phần trăm.)","h":"mkpp41aiq0"},{"id":"III4","n":4,"html":"Tiến hành hai thí nghiệm với dung dịch saccharose. Thí nghiệm 1: cho dung dịch saccharose vào ống nghiệm chứa Cu(OH)\u003csub>2\u003c/sub> mới điều chế, lắc nhẹ. Thí nghiệm 2: đun nóng dung dịch saccharose với dung dịch H\u003csub>2\u003c/sub>SO\u003csub>4\u003c/sub> loãng một thời gian, trung hòa acid bằng NaOH, rồi cho sản phẩm vào Cu(OH)\u003csub>2\u003c/sub> trong môi trường kiềm, đun nóng.\u003cbr>Cho các phát biểu:\u003cbr>(1) Ở thí nghiệm 1 thu được dung dịch màu xanh lam.\u003cbr>(2) Ở thí nghiệm 1, phản ứng xảy ra là do saccharose có nhóm –CHO.\u003cbr>(3) Nếu đun nóng dung dịch thu được ở thí nghiệm 1 thì xuất hiện kết tủa màu đỏ gạch.\u003cbr>(4) Ở thí nghiệm 2, sau khi đun nóng thu được kết tủa màu đỏ gạch.\u003cbr>(5) Sản phẩm thủy phân saccharose gồm glucose và fructose.\u003cbr>Số phát biểu đúng là bao nhiêu?","h":"18jyfe0t9di"},{"id":"III5","n":5,"html":"Cho nước bromine dư vào dung dịch chứa 4,65 gam aniline (C\u003csub>6\u003c/sub>H\u003csub>5\u003c/sub>NH\u003csub>2\u003c/sub>), thu được m gam kết tủa trắng 2,4,6-tribromoaniline (C\u003csub>6\u003c/sub>H\u003csub>4\u003c/sub>NBr\u003csub>3\u003c/sub>). Biết hiệu suất phản ứng là 100%. Giá trị của m là bao nhiêu? (Làm tròn kết quả đến hàng phần mười.)","h":"17s7srs9r9t"},{"id":"III6","n":6,"html":"Cho các peptide: Gly–Ala, Gly–Ala–Val, Val–Gly–Gly–Ala, Ala–Ala. Số peptide cho phản ứng màu biuret (tạo hợp chất màu tím với Cu(OH)\u003csub>2\u003c/sub> trong môi trường kiềm) là bao nhiêu?","h":"3ve4bcaxpf"}]};
+function cyrb53(str, seed) {
+  seed = seed || 0;
+  var h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for (var i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+}
+
+var SCALE2 = [0, 0.1, 0.25, 0.5, 1.0];
+var KEY = 'hoa12gk1:' + EXAM.id;
+var $ = function(id){ return document.getElementById(id); };
+var state = null;       // {student, startedAt, endAt, answers, submitted, result}
+var timerId = null;
+
+function hk(id, val){ return cyrb53(EXAM.salt + '|' + id + '|' + val); }
+function canon(s){
+  s = String(s == null ? '' : s).trim().replace(/\s+/g, '').replace(',', '.');
+  if (!/^[-+]?\d+(\.\d+)?$/.test(s)) return null;
+  return String(parseFloat(s));
+}
+function fmt(x){ return (Math.round(x * 100) / 100).toString().replace('.', ','); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+function load(){ try { var s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch(e){ return null; } }
+
+/* ---------- dựng đề ---------- */
+function buildPaper(){
+  var h = '';
+  h += '<h2 class="part-h">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn<small>Chọn một phương án đúng cho mỗi câu (câu 1 – 18).</small></h2>';
+  EXAM.p1.forEach(function(q){
+    h += '<article class="q" id="q-' + q.id + '" data-id="' + q.id + '"><div class="qh"><span class="qn">Câu ' + q.n + '.</span><span class="mark"></span></div>';
+    h += '<div class="qt">' + q.html + '</div><div class="opts">';
+    ['A','B','C','D'].forEach(function(L, i){
+      h += '<label class="opt"><input type="radio" name="' + q.id + '" value="' + L + '"><span class="ol">' + L + '.</span><span class="ot">' + q.o[i] + '</span></label>';
+    });
+    h += '</div></article>';
+  });
+  h += '<h2 class="part-h">PHẦN II. Câu trắc nghiệm đúng sai<small>Trong mỗi ý a), b), c), d), chọn Đúng hoặc Sai.</small></h2>';
+  EXAM.p2.forEach(function(q){
+    h += '<article class="q" id="q-' + q.id + '" data-id="' + q.id + '"><div class="qh"><span class="qn">Câu ' + q.n + '.</span><span class="mark"></span></div>';
+    h += '<div class="qt">' + q.html + '</div>';
+    q.items.forEach(function(it, i){
+      h += '<div class="stmt" data-sid="' + it.id + '"><div><b>' + 'abcd'[i] + ')</b> ' + it.html + '</div><div class="tf">' +
+        '<label><input type="radio" name="' + it.id + '" value="Đ">Đúng</label>' +
+        '<label><input type="radio" name="' + it.id + '" value="S">Sai</label></div><div class="sm"></div></div>';
+    });
+    h += '</article>';
+  });
+  h += '<h2 class="part-h">PHẦN III. Câu trắc nghiệm trả lời ngắn<small>Nhập kết quả là một số; làm tròn theo yêu cầu của từng câu.</small></h2>';
+  EXAM.p3.forEach(function(q){
+    h += '<article class="q" id="q-' + q.id + '" data-id="' + q.id + '"><div class="qh"><span class="qn">Câu ' + q.n + '.</span><span class="mark"></span></div>';
+    h += '<div class="qt">' + q.html + '</div>';
+    h += '<div class="ans-in"><input type="text" inputmode="decimal" autocomplete="off" name="' + q.id + '" placeholder="Đáp án" aria-label="Đáp án câu ' + q.n + ' phần III"><span>Nhập số, ví dụ 12,5</span></div></article>';
+  });
+  $('paper').innerHTML = h;
+
+  var c = '<h4>Phần I</h4>';
+  EXAM.p1.forEach(function(q){ c += '<a class="chip" id="c-' + q.id + '" href="#q-' + q.id + '">' + q.n + '</a>'; });
+  c += '<h4>Phần II</h4>';
+  EXAM.p2.forEach(function(q){ c += '<a class="chip" id="c-' + q.id + '" href="#q-' + q.id + '">' + q.n + '</a>'; });
+  c += '<h4>Phần III</h4>';
+  EXAM.p3.forEach(function(q){ c += '<a class="chip" id="c-' + q.id + '" href="#q-' + q.id + '">' + q.n + '</a>'; });
+  $('chips').innerHTML = c;
+  $('chips').addEventListener('click', function(e){
+    var a = e.target.closest('a.chip'); if (!a) return;
+    e.preventDefault();
+    var t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+}
+
+function applyAnswers(){
+  var ans = state.answers;
+  Object.keys(ans).forEach(function(id){
+    var v = ans[id];
+    var els = document.getElementsByName(id);
+    for (var i = 0; i < els.length; i++){
+      if (els[i].type === 'radio') els[i].checked = (els[i].value === v);
+      else els[i].value = v;
+    }
+  });
+  refreshSel();
+}
+function refreshSel(){
+  var labs = document.querySelectorAll('.opt, .tf label');
+  for (var i = 0; i < labs.length; i++){
+    var inp = labs[i].querySelector('input');
+    labs[i].classList.toggle('sel', !!(inp && inp.checked));
+  }
+}
+
+/* ---------- tiến độ ---------- */
+function allIds(){
+  var ids = [];
+  EXAM.p1.forEach(function(q){ ids.push(q.id); });
+  EXAM.p2.forEach(function(q){ q.items.forEach(function(it){ ids.push(it.id); }); });
+  EXAM.p3.forEach(function(q){ ids.push(q.id); });
+  return ids;
+}
+function isAnswered(id){
+  var v = state.answers[id];
+  if (v == null || v === '') return false;
+  if (id.indexOf('III') === 0) return canon(v) !== null;
+  return true;
+}
+function updateProgress(){
+  var ids = allIds(), n = 0;
+  ids.forEach(function(id){ if (isAnswered(id)) n++; });
+  $('prog-txt').textContent = 'Đã trả lời ' + n + '/' + ids.length + ' lệnh hỏi';
+  $('prog-bar').style.width = (100 * n / ids.length) + '%';
+  if (state.submitted) return;
+  EXAM.p1.concat(EXAM.p3).forEach(function(q){
+    $('c-' + q.id).className = 'chip' + (isAnswered(q.id) ? ' done' : '');
+  });
+  EXAM.p2.forEach(function(q){
+    var k = 0; q.items.forEach(function(it){ if (isAnswered(it.id)) k++; });
+    $('c-' + q.id).className = 'chip' + (k === 4 ? ' done' : (k > 0 ? ' part' : ''));
+  });
+}
+function unanswered(){
+  var n = 0; allIds().forEach(function(id){ if (!isAnswered(id)) n++; }); return n;
+}
+
+/* ---------- đồng hồ ---------- */
+function tick(){
+  var left = Math.max(0, state.endAt - Date.now());
+  var m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+  var t = $('timer');
+  t.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  t.className = 'timer' + (left <= 60000 ? ' crit' : (left <= 300000 ? ' low' : ''));
+  if (left <= 0){ submit('Hết giờ làm bài, hệ thống đã tự động nộp bài.'); }
+}
+
+/* ---------- chấm điểm ---------- */
+function grade(){
+  var a = state.answers, d = {}, r = {p1: 0, p2: 0, p3: 0, c1: 0, c3: 0, p2k: []};
+  EXAM.p1.forEach(function(q){
+    var ok = !!a[q.id] && hk(q.id, a[q.id]) === q.h; d[q.id] = ok; if (ok){ r.p1 += 0.25; r.c1++; }
+  });
+  EXAM.p2.forEach(function(q){
+    var k = 0;
+    q.items.forEach(function(it){
+      var ok = !!a[it.id] && hk(it.id, a[it.id]) === it.h; d[it.id] = ok; if (ok) k++;
+    });
+    r.p2k.push(k); r.p2 += SCALE2[k];
+  });
+  EXAM.p3.forEach(function(q){
+    var c = canon(a[q.id]);
+    var ok = c !== null && hk(q.id, c) === q.h; d[q.id] = ok; if (ok){ r.p3 += 0.25; r.c3++; }
+  });
+  r.total = Math.round((r.p1 + r.p2 + r.p3) * 100) / 100;
+  r.detail = d;
+  return r;
+}
+
+/* ---------- nộp bài ---------- */
+function submit(msg){
+  if (state.submitted) return;
+  state.submitted = true;
+  state.submittedAt = Date.now();
+  state.msg = msg || '';
+  state.result = grade();
+  save();
+  showReview();
+}
+function lockInputs(){
+  var ins = document.querySelectorAll('#paper input');
+  for (var i = 0; i < ins.length; i++) ins[i].disabled = true;
+}
+function showReview(){
+  if (timerId){ clearInterval(timerId); timerId = null; }
+  lockInputs();
+  var r = state.result, d = r.detail;
+  EXAM.p1.concat(EXAM.p3).forEach(function(q){
+    var art = $('q-' + q.id), ok = d[q.id];
+    art.classList.add(ok ? 'ok' : 'bad');
+    var mk = art.querySelector('.mark'); mk.className = 'mark ' + (ok ? 'ok' : 'bad'); mk.textContent = ok ? '✓ Đúng' : '✗ Sai';
+    $('c-' + q.id).className = 'chip ' + (ok ? 'ok' : 'bad');
+  });
+  EXAM.p2.forEach(function(q, qi){
+    var k = r.p2k[qi], art = $('q-' + q.id);
+    q.items.forEach(function(it){
+      var el = document.querySelector('[data-sid="' + it.id + '"]');
+      el.classList.add(d[it.id] ? 'ok' : 'bad');
+      el.querySelector('.sm').textContent = d[it.id] ? '✓ Đúng' : '✗ Chưa đúng';
+      el.querySelector('.sm').style.color = d[it.id] ? 'var(--ok)' : 'var(--bad)';
+    });
+    var mk = art.querySelector('.mark');
+    mk.className = 'mark ' + (k === 4 ? 'ok' : (k === 0 ? 'bad' : 'half'));
+    mk.textContent = k + '/4 ý đúng · ' + fmt(SCALE2[k]) + ' điểm';
+    $('c-' + q.id).className = 'chip ' + (k === 4 ? 'ok' : (k === 0 ? 'bad' : 'half'));
+  });
+  var s = state.student, used = Math.max(0, Math.min(state.submittedAt, state.endAt) - state.startedAt);
+  var um = Math.floor(used / 60000), us = Math.floor((used % 60000) / 1000);
+  var h = '<h2>Kết quả bài làm</h2>';
+  if (state.msg) h += '<div class="note">' + esc(state.msg) + '</div>';
+  h += '<p class="sub">' + esc(s.name) + ' · Lớp ' + esc(s.cls) + (s.sbd ? ' · SBD ' + esc(s.sbd) : '') + ' · Thời gian làm bài: ' + um + ' phút ' + us + ' giây</p>';
+  h += '<div class="score"><div class="big">' + fmt(r.total) + '<small> / 10</small></div></div>';
+  h += '<table class="sc"><thead><tr><th>Phần</th><th>Kết quả</th><th>Điểm</th></tr></thead><tbody>' +
+    '<tr><td>I. Nhiều lựa chọn</td><td>' + r.c1 + '/18 câu đúng</td><td>' + fmt(r.p1) + ' / 4,5</td></tr>' +
+    '<tr><td>II. Đúng/sai</td><td>' + r.p2k.join(' – ') + ' ý đúng</td><td>' + fmt(r.p2) + ' / 4</td></tr>' +
+    '<tr><td>III. Trả lời ngắn</td><td>' + r.c3 + '/6 câu đúng</td><td>' + fmt(r.p3) + ' / 1,5</td></tr>' +
+    '</tbody></table>';
+  h += '<p class="disabled-note">Các câu được tô xanh là đúng, tô đỏ là chưa đúng. Đáp án chi tiết sẽ được giáo viên chữa sau. Bài đã được khóa, không thể sửa hoặc làm lại trên máy này.</p>';
+  h += '<div class="actions"><button type="button" class="primary" id="btn-dl">Tải kết quả (.txt)</button><button type="button" id="btn-print">In / Lưu PDF</button></div>';
+  var box = $('result'); box.innerHTML = h; box.hidden = false;
+  $('btn-dl').onclick = download; $('btn-print').onclick = function(){ window.print(); };
+  $('bar').hidden = false;
+  $('timer').textContent = 'Đã nộp'; $('timer').className = 'timer';
+  $('btn-submit').hidden = true; $('foot').hidden = true;
+  $('prog-txt').textContent = 'Điểm: ' + fmt(r.total) + '/10'; $('prog-bar').style.width = '100%';
+  document.getElementById('nav').open = false;
+  window.scrollTo(0, 0);
+}
+function download(){
+  var r = state.result, s = state.student, L = [];
+  L.push('KẾT QUẢ BÀI KIỂM TRA – ' + EXAM.title);
+  L.push('Họ và tên: ' + s.name); L.push('Lớp: ' + s.cls); L.push('SBD: ' + (s.sbd || ''));
+  L.push('Điểm: ' + fmt(r.total) + '/10');
+  L.push('Phần I: ' + r.c1 + '/18 câu đúng – ' + fmt(r.p1) + ' điểm');
+  L.push('Phần II: ' + r.p2k.join(', ') + ' ý đúng – ' + fmt(r.p2) + ' điểm');
+  L.push('Phần III: ' + r.c3 + '/6 câu đúng – ' + fmt(r.p3) + ' điểm');
+  L.push(''); L.push('Bài làm của thí sinh:');
+  EXAM.p1.forEach(function(q){ L.push('I.' + q.n + ': ' + (state.answers[q.id] || '(bỏ trống)') + (r.detail[q.id] ? ' [đúng]' : ' [sai]')); });
+  EXAM.p2.forEach(function(q){ q.items.forEach(function(it, i){ L.push('II.' + q.n + '.' + 'abcd'[i] + ': ' + (state.answers[it.id] === 'Đ' ? 'Đúng' : state.answers[it.id] === 'S' ? 'Sai' : '(bỏ trống)') + (r.detail[it.id] ? ' [đúng]' : ' [sai]')); }); });
+  EXAM.p3.forEach(function(q){ L.push('III.' + q.n + ': ' + (state.answers[q.id] || '(bỏ trống)') + (r.detail[q.id] ? ' [đúng]' : ' [sai]')); });
+  var blob = new Blob([L.join('\r\n')], {type: 'text/plain;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ket-qua-' + (s.name || 'hoc-sinh').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-') + '.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+/* ---------- vào bài ---------- */
+function enterExam(){
+  $('screen-start').hidden = true; $('screen-exam').hidden = false;
+  buildPaper(); applyAnswers();
+  $('who').textContent = state.student.name + ' · ' + state.student.cls;
+  updateProgress();
+  if (state.submitted){ showReview(); }
+  else { tick(); timerId = setInterval(tick, 1000); }
+  window.scrollTo(0, 0);
+}
+function start(){
+  var name = $('f-name').value.trim().replace(/\s+/g, ' '), cls = $('f-class').value.trim(), sbd = $('f-sbd').value.trim();
+  if (!name || !cls){ $('start-err').textContent = 'Vui lòng nhập Họ và tên và Lớp.'; return; }
+  $('start-err').textContent = '';
+  var now = Date.now();
+  state = {student: {name: name, cls: cls, sbd: sbd}, startedAt: now, endAt: now + EXAM.duration * 60000, answers: {}, submitted: false};
+  save(); enterExam();
+}
+
+function onAnswer(e){
+  var t = e.target; if (!t.name || state.submitted) return;
+  state.answers[t.name] = t.value;
+  save(); refreshSel(); updateProgress();
+}
+function askSubmit(){
+  if (state.submitted) return;
+  var n = unanswered();
+  $('dlg-msg').textContent = n ? ('Bạn còn ' + n + ' lệnh hỏi chưa trả lời. Sau khi nộp, bạn không thể sửa bài.') : 'Bạn đã trả lời tất cả các lệnh hỏi. Sau khi nộp, bạn không thể sửa bài.';
+  var d = $('dlg');
+  if (d.showModal) d.showModal(); else if (confirm($('dlg-msg').textContent + ' Nộp bài?')) submit('');
+}
+
+function init(){
+  if (location.hash === '#reset'){ try { localStorage.removeItem(KEY); } catch(e){} history.replaceState(null, '', location.pathname); }
+  $('m-time').textContent = EXAM.duration + ' phút';
+  $('btn-start').onclick = start;
+  $('start-form').addEventListener('submit', function(e){ e.preventDefault(); start(); });
+  $('start-form').addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); start(); } });
+  $('paper').addEventListener('change', onAnswer);
+  $('paper').addEventListener('input', onAnswer);
+  $('btn-submit').onclick = askSubmit; $('btn-submit2').onclick = askSubmit;
+  $('dlg-cancel').onclick = function(){ $('dlg').close(); };
+  $('dlg-ok').onclick = function(){ $('dlg').close(); submit(''); };
+  window.addEventListener('beforeunload', function(e){ if (state && !state.submitted){ e.preventDefault(); e.returnValue = ''; } });
+  var s = load();
+  if (s && s.student){
+    state = s;
+    enterExam();
+  }
+}
+init();
+})();
+</script>
+</body>
+</html>
